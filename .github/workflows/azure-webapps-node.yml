@@ -1,0 +1,48 @@
+# Workflow d'intégration continue pour un projet
+name: CI
+
+# Contrôle quand le workflow sera déclenché
+on:
+  # Déclenche le workflow lors des événements de push ou pull request sur la branche "main"
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Permet d'exécuter ce workflow manuellement depuis l'onglet Actions
+  workflow_dispatch:
+
+# Le workflow est composé d'un ou plusieurs jobs
+jobs:
+  # Ce workflow contient un seul job nommé "build-and-test"
+  build-and-test:
+    # Type de runner sur lequel le job sera exécuté
+    runs-on: ubuntu-latest
+
+    # Séquence de tâches à exécuter dans le cadre de ce job
+    steps:
+      # Étape 1 : Vérifie le code source dans le répertoire de travail
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Étape 2 : Configure la version de Node.js (par exemple, pour un projet JavaScript/TypeScript)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Étape 3 : Installe les dépendances
+      - name: Install dependencies
+        run: npm install
+
+      # Étape 4 : Exécute les tests
+      - name: Run tests
+        run: npm test
+
+      # Étape 5 : Construit le projet (optionnel)
+      - name: Build project
+        run: npm run build
+
+      # Étape 6 : Messages de journalisation
+      - name: Log completion message
+        run: echo "Build and tests completed successfully!"
